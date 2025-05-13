@@ -1,1 +1,1 @@
-# kuis
+# kuis bilangan berpangkat 1
