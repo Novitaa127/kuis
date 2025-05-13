@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kuis Bilangan Berpangkat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-purple-100 to-pink-50 min-h-screen flex flex-col items-center p-6">
+  <div class="bg-white shadow-2xl rounded-2xl p-6 w-full max-w-2xl">
+    <h1 class="text-3xl font-bold text-center text-purple-800 mb-6">Kuis Bilangan Berpangkat</h1>
+    <form id="quizForm" class="space-y-6"></form>
+    <div class="mt-6 text-center">
+      <button onclick="submitQuiz()" class="bg-purple-700 text-white py-2 px-6 rounded-lg hover:bg-purple-800 transition">Submit</button>
+      <button onclick="location.reload()" class="ml-4 text-purple-600 underline">Reset</button>
+      <p id="score" class="text-xl font-semibold mt-4 text-purple-700"></p>
+    </div>
+  </div>
+
+  <script>
+    const soal = [
+      { pertanyaan: "Berapakah hasil dari 2³?", pilihan: ["6", "8", "9", "12"], jawaban: "8" },
+      { pertanyaan: "Berapakah hasil dari 3²?", pilihan: ["6", "9", "8", "12"], jawaban: "9" },
+      { pertanyaan: "Berapakah hasil dari 5¹?", pilihan: ["0", "1", "5", "10"], jawaban: "5" },
+      { pertanyaan: "Berapakah hasil dari 4²?", pilihan: ["16", "8", "12", "6"], jawaban: "16" },
+      { pertanyaan: "Berapakah hasil dari 10⁰?", pilihan: ["0", "1", "10", "Tidak tentu"], jawaban: "1" },
+      { pertanyaan: "Berapakah hasil dari 2⁴?", pilihan: ["8", "12", "16", "24"], jawaban: "16" },
+      { pertanyaan: "Berapakah hasil dari 6²?", pilihan: ["36", "12", "30", "18"], jawaban: "36" },
+      { pertanyaan: "Berapakah hasil dari 3³?", pilihan: ["6", "9", "27", "18"], jawaban: "27" }
+    ];
+
+    function acakArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    const soalTerpilih = acakArray([...soal]).slice(0, 5);
+    const form = document.getElementById("quizForm");
+
+    soalTerpilih.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.classList.add("bg-gray-50", "p-4", "rounded-xl", "shadow");
+
+      const question = document.createElement("p");
+      question.classList.add("font-semibold", "mb-2");
+      question.innerText = `${index + 1}. ${item.pertanyaan}`;
+      div.appendChild(question);
+
+      item.pilihan.forEach(pilihan => {
+        const label = document.createElement("label");
+        label.classList.add("block", "cursor-pointer", "mb-1");
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = `soal${index}`;
+        input.value = pilihan;
+        input.classList.add("mr-2");
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(pilihan));
+        div.appendChild(label);
+      });
+
+      form.appendChild(div);
+    });
+
+    function submitQuiz() {
+      let skor = 0;
+      soalTerpilih.forEach((item, index) => {
+        const pilihan = document.querySelector(`input[name="soal${index}"]:checked`);
+        if (pilihan && pilihan.value === item.jawaban) {
+          skor++;
+          pilihan.parentElement.classList.add("text-green-600", "font-bold");
+        } else if (pilihan) {
+          pilihan.parentElement.classList.add("text-red-600", "line-through");
+        }
+      });
+
+      document.getElementById("score").innerText = `Skor kamu: ${skor} dari 5`;
+    }
+  </script>
+</body>
+</html>
